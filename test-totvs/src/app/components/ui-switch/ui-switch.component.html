@@ -1,0 +1,12 @@
+<button
+  type="button"
+  class="switch"
+  role="switch"
+  [attr.aria-checked]="value"
+  [disabled]="disabled"
+  (click)="toggle()"
+>
+  <span class="thumb">
+    <span class="icon" *ngIf="value">✔</span>
+  </span>
+</button>

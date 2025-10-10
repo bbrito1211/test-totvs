@@ -1,0 +1,23 @@
+<div class="select-container">
+  <button type="button"
+          class="select-trigger"
+          [disabled]="disabled"
+          (click)="toggle()"
+          [attr.aria-haspopup]="'listbox'"
+          [attr.aria-expanded]="open"
+          [attr.aria-disabled]="disabled">
+    <span class="label">{{ selectedLabel }}</span>
+    <span class="chevron" aria-hidden="true">▼</span>
+  </button>
+
+  <ul *ngIf="open" class="select-options" role="listbox">
+    <li *ngFor="let opt of options"
+        role="option"
+        [attr.aria-selected]="opt.value === value"
+        [attr.aria-disabled]="opt.disabled"
+        (click)="select(opt)"
+        [class.disabled]="opt.disabled">
+      {{ opt.label }}
+    </li>
+  </ul>
+</div>

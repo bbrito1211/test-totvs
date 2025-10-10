@@ -1,0 +1,23 @@
+<div class="app-container" [class.dark-mode]="darkMode">
+  <header>
+    <h1>Teste - Front-end - TOTVS</h1>
+    <button class="theme-toggle" (click)="toggleTheme()" aria-label="Alternar tema">
+      <span *ngIf="darkMode">🌙</span>
+      <span *ngIf="!darkMode">☀️</span>
+    </button>
+  </header>
+
+  <form class="form-card">
+    <section>
+      <label for="select">Select</label>
+      <ui-select [(ngModel)]="selectedValue" name="select" [options]="options"></ui-select>
+      <p>Selecionado: {{ selectedValue }}</p>
+    </section>
+
+    <section>
+      <label for="switch">Switch</label>
+      <ui-switch [(ngModel)]="switchValue" name="switch"></ui-switch>
+      <p>Status: {{ switchValue }}</p>
+    </section>
+  </form>
+</div>
