@@ -1,8 +1,8 @@
 # Teste Front-End Angular - TOTVS
 
-- Angular 20 (Standalone Components)
-- Jest + jest-preset-angular (unit tests)
-- Cypress (end-to-end tests)
+- Angular 20 
+- Jest + jest-preset-angular 
+- Cypress 
 - TypeScript 5.9+
 
 No diretório do projeto, você pode rodar:
