@@ -21,6 +21,7 @@ export class AppComponent {
   switchValue = false;
 
   darkMode = false;
+  
   toggleTheme() {
     this.darkMode = !this.darkMode;
   }
