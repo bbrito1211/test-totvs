@@ -37,3 +37,21 @@ body {
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+:root {
+  --color-bg: #ffffff;
+  --color-surface: #f9f9f9;
+  --color-border: #ccc;
+  --color-text: #000;
+  --color-hover: #f0f0f0;
+  --color-focus: #007bff;
+}
+
+.dark-mode {
+  --color-bg: #121212;
+  --color-surface: #1e1e1e;
+  --color-border: #444;
+  --color-text: #f5f5f5;
+  --color-hover: #333;
+  --color-focus: #3399ff;
+}

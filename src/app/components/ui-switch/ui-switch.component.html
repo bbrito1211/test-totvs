@@ -1,12 +1,14 @@
 <button
   type="button"
   class="switch"
+  [class.on]="value"
+  [class.off]="!value"
+  [class.disabled]="disabled"
   role="switch"
   [attr.aria-checked]="value"
+  [attr.aria-disabled]="disabled"
   [disabled]="disabled"
   (click)="toggle()"
 >
-  <span class="thumb">
-    <span class="icon" *ngIf="value">✔</span>
-  </span>
+  <span class="thumb"></span>
 </button>
