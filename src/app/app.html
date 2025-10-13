@@ -1,23 +1,49 @@
-<div class="app-container" [class.dark-mode]="darkMode">
-  <header>
-    <h1>Teste - Front-end - TOTVS</h1>
-    <button class="theme-toggle" (click)="toggleTheme()" aria-label="Alternar tema">
-      <span *ngIf="darkMode">🌙</span>
-      <span *ngIf="!darkMode">☀️</span>
-    </button>
-  </header>
+<div class="demo">
+  <h1>Teste - Front-end - TOTVS</h1>
 
-  <form class="form-card">
-    <section>
-      <label for="select">Select</label>
-      <ui-select [(ngModel)]="selectedValue" name="select" [options]="options"></ui-select>
-      <p>Selecionado: {{ selectedValue }}</p>
-    </section>
+  <button (click)="toggleTheme()" class="theme-toggle">
+    {{ darkMode ? '🌙 Dark' : '☀️ Light' }}
+  </button>
 
-    <section>
-      <label for="switch">Switch</label>
-      <ui-switch [(ngModel)]="switchValue" name="switch"></ui-switch>
-      <p>Status: {{ switchValue }}</p>
-    </section>
-  </form>
+
+  <div class="controls">
+    <h2>Configurações</h2>
+
+    <label>
+      Placeholder:
+      <input type="text" [(ngModel)]="placeholder" />
+    </label>
+
+    <label>
+      Select desabilitado:
+      <input type="checkbox" [(ngModel)]="selectDisabled" />
+    </label>
+
+    <label>
+      Switch desabilitado:
+      <input type="checkbox" [(ngModel)]="switchDisabled" />
+    </label>
+
+    <label>
+      Opções (separadas por vírgula):
+      <input type="text" [(ngModel)]="optionsInput" (blur)="updateOptions()" />
+    </label>
+  </div>
+
+  <div class="preview">
+    <h2>Preview</h2>
+
+    <label>Select</label>
+    <ui-select
+      [(ngModel)]="selected"
+      [options]="options"
+      [placeholder]="placeholder"
+      [disabled]="selectDisabled"
+    ></ui-select>
+    <p>Selecionado: {{ selected }}</p>
+
+    <label>Switch</label>
+    <ui-switch [(ngModel)]="status" [disabled]="switchDisabled"></ui-switch>
+    <p>Status: {{ status }}</p>
+  </div>
 </div>

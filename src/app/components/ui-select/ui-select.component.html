@@ -10,11 +10,7 @@
     {{ selectedLabel }}
   </button>
 
-  <ul
-    *ngIf="open"
-    role="listbox"
-    class="select-options"
-  >
+  <ul *ngIf="open" role="listbox" class="select-options">
     <li
       *ngFor="let opt of options; let i = index"
       role="option"
