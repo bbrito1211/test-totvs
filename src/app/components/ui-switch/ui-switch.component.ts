@@ -1,4 +1,4 @@
-import { Component, Input, forwardRef } from '@angular/core';
+import { Component, forwardRef, Input, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
@@ -26,20 +26,23 @@ export class UiSwitchComponent implements ControlValueAccessor {
   writeValue(v: boolean): void {
     this.value = v;
   }
-  registerOnChange(fn: any) {
-    this.onChange = fn;
-  }
-  registerOnTouched(fn: any) {
-    this.onTouched = fn;
-  }
-  setDisabledState(dis: boolean) {
-    this.disabled = dis;
-  }
+  registerOnChange(fn: any) { this.onChange = fn; }
+  registerOnTouched(fn: any) { this.onTouched = fn; }
+  setDisabledState(dis: boolean) { this.disabled = dis; }
 
   toggle() {
     if (this.disabled) return;
     this.value = !this.value;
     this.onChange(this.value);
     this.onTouched();
+  }
+
+  @HostListener('keydown', ['$event'])
+  handleKeydown(event: KeyboardEvent) {
+    if (this.disabled) return;
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      this.toggle();
+    }
   }
 }
