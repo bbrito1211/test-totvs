@@ -1,23 +1,31 @@
 .select-container {
   position: relative;
-  width: 200px;
+  width: 220px;
 
   &.disabled {
-    opacity: 0.5;
-    pointer-events: none;
+    opacity: 0.6;
+
+    .select-trigger {
+      cursor: not-allowed;
+    }
   }
 }
 
 .select-trigger {
   width: 100%;
-  padding: 0.5rem;
+  padding: 0.5rem 0.75rem;
   border: 1px solid var(--color-border);
   background: var(--color-surface);
   color: var(--color-text);
-  text-align: left;
+  font-size: 0.95rem;
+  border-radius: 6px;
   cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.2s, border-color 0.2s;
 
-  &:hover {
+  &:hover:not(:disabled) {
     background: var(--color-hover);
   }
 
@@ -29,18 +37,24 @@
 
 .select-options {
   position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
   z-index: 10;
   width: 100%;
   margin: 0;
-  padding: 0;
+  padding: 4px 0;
   list-style: none;
   border: 1px solid var(--color-border);
   background: var(--color-surface);
   color: var(--color-text);
+  border-radius: 6px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 
   li {
-    padding: 0.5rem;
+    padding: 0.5rem 0.75rem;
     cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.2s, color 0.2s;
 
     &:hover {
       background: var(--color-hover);
@@ -54,6 +68,11 @@
     &.disabled {
       color: #888;
       cursor: not-allowed;
+      background: transparent;
+
+      &:hover {
+        background: transparent;
+      }
     }
   }
 }

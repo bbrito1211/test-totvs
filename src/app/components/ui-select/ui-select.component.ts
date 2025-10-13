@@ -1,4 +1,4 @@
-import { Component, Input, forwardRef, HostListener } from '@angular/core';
+import { Component, Input, forwardRef, HostListener, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
@@ -23,7 +23,9 @@ export class UiSelectComponent implements ControlValueAccessor {
 
   value?: string;
   open = false;
-  focusedIndex = -1; // 👈 para navegação via teclado
+  focusedIndex = -1;
+
+  constructor(private elRef: ElementRef) {}
 
   onChange = (_: any) => {};
   onTouched = () => {};
@@ -39,7 +41,6 @@ export class UiSelectComponent implements ControlValueAccessor {
     if (!this.disabled) {
       this.open = !this.open;
       if (this.open) {
-        // inicializa índice focado no primeiro item ativo
         this.focusedIndex = this.options.findIndex(o => !o.disabled);
       }
       this.onTouched();
@@ -55,6 +56,13 @@ export class UiSelectComponent implements ControlValueAccessor {
 
   get selectedLabel(): string {
     return this.options.find((o) => o.value === this.value)?.label || this.placeholder;
+  }
+
+  @HostListener('document:click', ['$event'])
+  onClickOutside(event: Event) {
+    if (this.open && !this.elRef.nativeElement.contains(event.target)) {
+      this.open = false;
+    }
   }
 
   @HostListener('keydown', ['$event'])
@@ -86,7 +94,7 @@ export class UiSelectComponent implements ControlValueAccessor {
   private moveFocus(delta: number) {
     let next = this.focusedIndex + delta;
     while (next >= 0 && next < this.options.length && this.options[next].disabled) {
-      next += delta; 
+      next += delta;
     }
     if (next >= 0 && next < this.options.length) {
       this.focusedIndex = next;

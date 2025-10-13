@@ -12,17 +12,27 @@ import { UiSwitchComponent } from './components/ui-switch/ui-switch.component';
   styleUrls: ['./app.scss']
 })
 export class AppComponent {
-  options = [
-    { value: '1', label: 'Opção 1' },
-    { value: '2', label: 'Opção 2' },
-    { value: '3', label: 'Opção 3', disabled: true }
-  ];
-  selectedValue?: string;
-  switchValue = false;
-
-  darkMode = false;
-  
-  toggleTheme() {
-    this.darkMode = !this.darkMode;
-  }
+   darkMode = false;
+   selected?: string;
+   placeholder = 'Selecione';
+   selectDisabled = false;
+   status = false;
+   switchDisabled = false;
+   options = [
+     { value: '1', label: 'Opção 1' },
+     { value: '2', label: 'Opção 2' }
+   ];
+   optionsInput = 'Opção 1, Opção 2';
+ 
+   toggleTheme() {
+     this.darkMode = !this.darkMode;
+     document.body.classList.toggle('dark-mode', this.darkMode);
+   }
+ 
+   updateOptions() {
+     this.options = this.optionsInput.split(',').map((label, idx) => ({
+       value: String(idx + 1),
+       label: label.trim()
+     }));
+   }
 }
