@@ -1,78 +1,57 @@
-.select-container {
+.select-wrapper {
   position: relative;
-  width: 220px;
-
-  &.disabled {
-    opacity: 0.6;
-
-    .select-trigger {
-      cursor: not-allowed;
-    }
-  }
-}
-
-.select-trigger {
   width: 100%;
-  padding: 0.5rem 0.75rem;
-  border: 1px solid var(--color-border);
-  background: var(--color-surface);
-  color: var(--color-text);
-  font-size: 0.95rem;
-  border-radius: 6px;
-  cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  transition: background 0.2s, border-color 0.2s;
 
-  &:hover:not(:disabled) {
-    background: var(--color-hover);
-  }
-
-  &:focus {
-    outline: 2px solid var(--color-focus);
-    outline-offset: 2px;
-  }
-}
-
-.select-options {
-  position: absolute;
-  top: calc(100% + 4px);
-  left: 0;
-  z-index: 10;
-  width: 100%;
-  margin: 0;
-  padding: 4px 0;
-  list-style: none;
-  border: 1px solid var(--color-border);
-  background: var(--color-surface);
-  color: var(--color-text);
-  border-radius: 6px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-
-  li {
-    padding: 0.5rem 0.75rem;
+  select {
+    width: 100%;
+    padding: 0.6rem 0.8rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: #fff;
+    font-size: 0.95rem;
+    font-family: inherit;
     cursor: pointer;
-    font-size: 0.9rem;
-    transition: background 0.2s, color 0.2s;
+    appearance: none;
+    transition: border 0.2s, box-shadow 0.2s, background 0.2s;
 
-    &:hover {
-      background: var(--color-hover);
+    &:focus {
+      outline: none;
+      border-color: #6750a4;
+      box-shadow: 0 0 0 2px rgba(103, 80, 164, 0.3);
     }
 
-    &.focused {
-      background: var(--color-focus);
-      color: #fff;
-    }
-
-    &.disabled {
-      color: #888;
+    &:disabled {
+      background: #f0f0f0;
+      color: #999;
+      border-color: #ddd;
       cursor: not-allowed;
-      background: transparent;
-
-      &:hover {
-        background: transparent;
-      }
     }
+  }
+
+  &.error select {
+    border-color: #d32f2f;
+  }
+
+  &.error select:focus {
+    box-shadow: 0 0 0 2px rgba(211, 47, 47, 0.3);
+  }
+
+  &::after {
+    content: "▾";
+    position: absolute;
+    right: 0.8rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.75rem;
+    color: #555;
+    pointer-events: none;
+  }
+
+  &.disabled::after {
+    color: #aaa;
+  }
+
+  &.error::after {
+    color: #d32f2f;
   }
 }

@@ -1,11 +1,19 @@
-import { Component, Input, forwardRef, HostListener, ElementRef } from '@angular/core';
+import { Component, forwardRef, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+
+interface SelectOption {
+  value: string;
+  label: string;
+  disabled?: boolean;
+}
 
 @Component({
   selector: 'ui-select',
   standalone: true,
   imports: [CommonModule],
+  templateUrl: './ui-select.component.html',
+  styleUrls: ['./ui-select.component.scss'],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -13,91 +21,38 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
       multi: true,
     },
   ],
-  templateUrl: './ui-select.component.html',
-  styleUrls: ['./ui-select.component.scss'],
 })
 export class UiSelectComponent implements ControlValueAccessor {
-  @Input() options: { value: string; label: string; disabled?: boolean }[] = [];
-  @Input() placeholder = 'Selecione';
+  @Input() options: SelectOption[] = [];
+  @Input() placeholder = 'Choose an option';
   @Input() disabled = false;
+  @Input() error = false;
 
-  value?: string;
-  open = false;
-  focusedIndex = -1;
+  value: string | null = null;
 
-  constructor(private elRef: ElementRef) {}
+  private onChange: (val: any) => void = () => {};
+  private onTouched: () => void = () => {};
 
-  onChange = (_: any) => {};
-  onTouched = () => {};
-
-  writeValue(v: string | undefined): void {
-    this.value = v;
-  }
-  registerOnChange(fn: any) { this.onChange = fn; }
-  registerOnTouched(fn: any) { this.onTouched = fn; }
-  setDisabledState(dis: boolean) { this.disabled = dis; }
-
-  toggle() {
-    if (!this.disabled) {
-      this.open = !this.open;
-      if (this.open) {
-        this.focusedIndex = this.options.findIndex(o => !o.disabled);
-      }
-      this.onTouched();
-    }
+  writeValue(val: string | null): void {
+    this.value = val;
   }
 
-  select(opt: any) {
-    if (opt.disabled) return;
-    this.value = opt.value;
+  registerOnChange(fn: any): void {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: any): void {
+    this.onTouched = fn;
+  }
+
+  setDisabledState(isDisabled: boolean): void {
+    this.disabled = isDisabled;
+  }
+
+  handleChange(event: Event) {
+    const selectEl = event.target as HTMLSelectElement;
+    this.value = selectEl.value || null;
     this.onChange(this.value);
-    this.open = false;
-  }
-
-  get selectedLabel(): string {
-    return this.options.find((o) => o.value === this.value)?.label || this.placeholder;
-  }
-
-  @HostListener('document:click', ['$event'])
-  onClickOutside(event: Event) {
-    if (this.open && !this.elRef.nativeElement.contains(event.target)) {
-      this.open = false;
-    }
-  }
-
-  @HostListener('keydown', ['$event'])
-  handleKeydown(event: KeyboardEvent) {
-    if (this.disabled) return;
-
-    if (!this.open && (event.key === 'Enter' || event.key === ' ')) {
-      event.preventDefault();
-      this.toggle();
-      return;
-    }
-
-    if (this.open) {
-      if (event.key === 'ArrowDown') {
-        event.preventDefault();
-        this.moveFocus(1);
-      } else if (event.key === 'ArrowUp') {
-        event.preventDefault();
-        this.moveFocus(-1);
-      } else if (event.key === 'Enter') {
-        event.preventDefault();
-        if (this.focusedIndex >= 0) this.select(this.options[this.focusedIndex]);
-      } else if (event.key === 'Escape') {
-        this.open = false;
-      }
-    }
-  }
-
-  private moveFocus(delta: number) {
-    let next = this.focusedIndex + delta;
-    while (next >= 0 && next < this.options.length && this.options[next].disabled) {
-      next += delta;
-    }
-    if (next >= 0 && next < this.options.length) {
-      this.focusedIndex = next;
-    }
+    this.onTouched();
   }
 }

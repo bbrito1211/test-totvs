@@ -16,72 +16,85 @@ describe('UiSwitchComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', async () => {
-    await fixture.whenStable();
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should be off by default', async () => {
-    await fixture.whenStable();
-    const buttonDe = fixture.debugElement.query(By.css('button[role="switch"]'));
-    expect(buttonDe).toBeTruthy();
-
-    const button = buttonDe.nativeElement as HTMLButtonElement;
-    expect(component.value).toBe(false);
-    expect(button.getAttribute('aria-checked')).toBe('false');
-  });
-
-  it('should toggle ON when clicked', async () => {
-    await fixture.whenStable();
-    const buttonDe = fixture.debugElement.query(By.css('button[role="switch"]'));
-    const button = buttonDe.nativeElement as HTMLButtonElement;
-
-    button.click();
+  it('should toggle value when clicked if not disabled', () => {
+    const btn = fixture.debugElement.query(By.css('button'));
+    btn.triggerEventHandler('click');
     fixture.detectChanges();
-    await fixture.whenStable();
-
     expect(component.value).toBe(true);
-    expect(button.getAttribute('aria-checked')).toBe('true');
-  });
 
-  it('should toggle OFF when clicked twice', async () => {
-    await fixture.whenStable();
-    const buttonDe = fixture.debugElement.query(By.css('button[role="switch"]'));
-    const button = buttonDe.nativeElement as HTMLButtonElement;
-
-    button.click();
+    btn.triggerEventHandler('click');
     fixture.detectChanges();
-    await fixture.whenStable();
-
-    button.click();
-    fixture.detectChanges();
-    await fixture.whenStable();
-
     expect(component.value).toBe(false);
-    expect(button.getAttribute('aria-checked')).toBe('false');
   });
 
-  it('should not toggle when disabled', async () => {
+  it('should not toggle when disabled', () => {
     component.disabled = true;
     fixture.detectChanges();
-    await fixture.whenStable();
 
-    const buttonDe = fixture.debugElement.query(By.css('button[role="switch"]'));
-    const button = buttonDe.nativeElement as HTMLButtonElement;
-
-    button.click();
+    const btn = fixture.debugElement.query(By.css('button'));
+    btn.triggerEventHandler('click');
     fixture.detectChanges();
-    await fixture.whenStable();
 
     expect(component.value).toBe(false);
-    expect(button.getAttribute('aria-checked')).toBe('false');
   });
 
-  it('should not toggle when toggle() is called and component is disabled', () => {
+  it('should write value from form control', () => {
+    component.writeValue(true);
+    expect(component.value).toBe(true);
+
+    component.writeValue(false);
+    expect(component.value).toBe(false);
+  });
+
+  it('should call onChange and onTouched when toggled', () => {
+    const onChangeSpy = jest.fn();
+    const onTouchedSpy = jest.fn();
+    component.registerOnChange(onChangeSpy);
+    component.registerOnTouched(onTouchedSpy);
+
+    component.toggle();
+
+    expect(onChangeSpy).toHaveBeenCalledWith(true);
+    expect(onTouchedSpy).toHaveBeenCalled();
+  });
+
+  it('should update disabled state from form control', () => {
+    component.setDisabledState(true);
+    expect(component.disabled).toBe(true);
+
+    component.setDisabledState(false);
+    expect(component.disabled).toBe(false);
+  });
+
+  it('should toggle with Enter key', () => {
+    const event = new KeyboardEvent('keydown', { key: 'Enter' });
+    component.handleKeydown(event);
+    expect(component.value).toBe(true);
+  });
+
+  it('should toggle with Space key', () => {
+    const event = new KeyboardEvent('keydown', { key: ' ' });
+    component.handleKeydown(event);
+    expect(component.value).toBe(true);
+  });
+
+  it('should not toggle with other keys', () => {
+    component.value = false;
+    const event = new KeyboardEvent('keydown', { key: 'Escape' });
+    component.handleKeydown(event);
+    expect(component.value).toBe(false);
+  });
+
+  it('should not toggle with keyboard if disabled', () => {
     component.disabled = true;
     component.value = false;
 
-    component.toggle();
+    const event = new KeyboardEvent('keydown', { key: 'Enter' });
+    component.handleKeydown(event);
 
     expect(component.value).toBe(false);
   });

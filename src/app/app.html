@@ -1,49 +1,54 @@
 <div class="demo">
   <h1>Teste - Front-end - TOTVS</h1>
 
-  <button (click)="toggleTheme()" class="theme-toggle">
-    {{ darkMode ? '🌙 Dark' : '☀️ Light' }}
-  </button>
-
-
-  <div class="controls">
+  <section class="controls">
     <h2>Configurações</h2>
 
-    <label>
-      Placeholder:
+    <div class="form-item">
+      <label>Placeholder:</label>
       <input type="text" [(ngModel)]="placeholder" />
-    </label>
+    </div>
 
-    <label>
-      Select desabilitado:
+    <div class="form-item">
+      <label>Select desabilitado:</label>
       <input type="checkbox" [(ngModel)]="selectDisabled" />
-    </label>
+    </div>
 
-    <label>
-      Switch desabilitado:
+    <div class="form-item">
+      <label>Switch desabilitado:</label>
       <input type="checkbox" [(ngModel)]="switchDisabled" />
-    </label>
+    </div>
 
-    <label>
-      Opções (separadas por vírgula):
+    <div class="form-item">
+      <label>Erro no Select:</label>
+      <input type="checkbox" [(ngModel)]="hasError" />
+    </div>
+
+    <div class="form-item">
+      <label>Opções (separadas por vírgula):</label>
       <input type="text" [(ngModel)]="optionsInput" (blur)="updateOptions()" />
-    </label>
-  </div>
+    </div>
+  </section>
 
-  <div class="preview">
+  <section class="preview">
     <h2>Preview</h2>
 
-    <label>Select</label>
-    <ui-select
-      [(ngModel)]="selected"
-      [options]="options"
-      [placeholder]="placeholder"
-      [disabled]="selectDisabled"
-    ></ui-select>
-    <p>Selecionado: {{ selected }}</p>
+    <div class="preview-item">
+      <label>Select</label>
+      <ui-select
+        [(ngModel)]="selected"
+        [options]="options"
+        [placeholder]="placeholder"
+        [disabled]="selectDisabled"
+        [error]="hasError"
+      ></ui-select>
+      <p>Selecionado: {{ selectedLabel }}</p>
+    </div>
 
-    <label>Switch</label>
-    <ui-switch [(ngModel)]="status" [disabled]="switchDisabled"></ui-switch>
-    <p>Status: {{ status }}</p>
-  </div>
+    <div class="preview-item">
+      <label>Switch</label>
+      <ui-switch [(ngModel)]="status" [disabled]="switchDisabled"></ui-switch>
+      <p>Status: {{ status }}</p>
+    </div>
+  </section>
 </div>

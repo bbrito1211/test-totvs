@@ -1,48 +1,94 @@
 .switch {
-  width: 48px;
-  height: 24px;
-  border-radius: 999px;
-  border: 2px solid transparent;
-  background-color: #ccc;
   position: relative;
+  width: 3rem;
+  height: 1rem;
+  border: none;
+  background: transparent;
   cursor: pointer;
-  transition: background-color 0.2s, border-color 0.2s;
-
+  outline: none;
+  padding: 0;
   display: inline-flex;
   align-items: center;
 
-  .thumb {
-    width: 18px;
-    height: 18px;
-    background: #fff;
-    border-radius: 50%;
+  .track {
     position: absolute;
-    left: 2px;
-    transition: transform 0.2s;
+    width: 90%;
+    height: 100%;
+    border-radius: 999px;
+    background-color: #e0e0e0; 
+    transition: background-color 0.25s;
+  }
+
+  .thumb {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    width: 20px;  
+    height: 20px;
+    border-radius: 100%;
+    background: #fff;
+    border: 2px solid #555;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.25s, background 0.25s, border 0.25s;
+
+    .icon {
+      font-size: 0.75rem;
+      font-weight: bold;
+      color: #fff;
+    }
   }
 
   &.on {
-    background-color: #007bff; 
+    .track {
+      background-color: #eaddff; 
+    }
     .thumb {
-      transform: translateX(24px);
+      background: #6750a4; 
+      border: none;
+      border: 2px solid #6750a4;
+      transform: translate(1.5rem, -50%); 
     }
   }
 
   &.off {
-    background-color: #ccc;
+    .track {
+      background-color: #e0e0e0; 
+    }
+    .thumb {
+      background: #fff;
+      border: 2px solid #555;
+      transform: translate(0, -50%);
+    }
   }
 
   &:hover:not(.disabled) {
-    border-color: #999;
+    .thumb {
+      border-color: #6750a4;
+    }
   }
 
-  &:focus-visible {
-    outline: 2px solid #007bff;
-    outline-offset: 2px;
+  &:focus-visible::after {
+    content: "";
+    position: absolute;
+    top: -8px;
+    left: -6px;
+    right: -6px;
+    bottom: -8px;
+    border: 2px solid #6750a4;
+    border-radius: 0; 
+    pointer-events: none; 
   }
 
   &.disabled {
     opacity: 0.5;
     cursor: not-allowed;
+
+    .thumb {
+      border-color: #aaa;
+      background: #ccc;
+    }
   }
 }

@@ -20,103 +20,90 @@ describe('UiSelectComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should show placeholder by default', async () => {
-    component.placeholder = 'Selecione';
-    fixture.detectChanges();
-    await fixture.whenStable();
-
-    const trigger = fixture.debugElement.query(By.css('.select-trigger'));
-    expect(trigger).toBeTruthy();
-    expect(trigger.nativeElement.textContent).toContain('Selecione');
+  it('should render placeholder when no value selected', () => {
+    const selectEl: HTMLSelectElement = fixture.debugElement.query(By.css('select')).nativeElement;
+    expect(selectEl.value).toBe('');
+    expect(selectEl.options[0].textContent?.trim()).toBe('Choose an option');
   });
 
-  it('should open options when trigger is clicked', async () => {
+  it('should update value when an option is selected', () => {
     component.options = [
-      { value: '1', label: 'Opção 1' },
-      { value: '2', label: 'Opção 2' },
-    ];
-    fixture.detectChanges();
-    await fixture.whenStable();
-
-    const trigger = fixture.debugElement.query(By.css('.select-trigger'));
-    expect(trigger).toBeTruthy();
-
-    trigger.nativeElement.click();
-    fixture.detectChanges();
-    await fixture.whenStable();
-
-    const options = fixture.debugElement.queryAll(By.css('.select-options li'));
-    expect(options.length).toBe(2);
-  });
-
-  it('should select option and close list', () => {
-    component.options = [
-      { value: '1', label: 'Opção 1' },
-      { value: '2', label: 'Opção 2' },
+      { value: '1', label: 'Option 1' },
+      { value: '2', label: 'Option 2' },
     ];
     fixture.detectChanges();
 
-    const trigger = fixture.debugElement.query(By.css('.select-trigger')).nativeElement;
-    trigger.click();
-    fixture.detectChanges();
-
-    const firstOption = fixture.debugElement.query(By.css('.select-options li')).nativeElement;
-    firstOption.click();
+    const selectEl: HTMLSelectElement = fixture.debugElement.query(By.css('select')).nativeElement;
+    selectEl.value = selectEl.options[1].value; 
+    selectEl.dispatchEvent(new Event('change'));
     fixture.detectChanges();
 
     expect(component.value).toBe('1');
-    expect(component.open).toBe(false);
-    expect(trigger.textContent).toContain('Opção 1');
   });
 
-  it('should not select if option is disabled', () => {
-    component.options = [
-      { value: '1', label: 'Ativo' },
-      { value: '2', label: 'Desabilitado', disabled: true },
-    ];
+  it('should call onChange and onTouched when selection changes', () => {
+    const onChangeSpy = jest.fn();
+    const onTouchedSpy = jest.fn();
+    component.registerOnChange(onChangeSpy);
+    component.registerOnTouched(onTouchedSpy);
+
+    component.options = [{ value: '1', label: 'Option 1' }];
     fixture.detectChanges();
 
-    const trigger = fixture.debugElement.query(By.css('.select-trigger')).nativeElement;
-    trigger.click();
-    fixture.detectChanges();
+    const selectEl: HTMLSelectElement = fixture.debugElement.query(By.css('select')).nativeElement;
+    selectEl.value = '1';
+    selectEl.dispatchEvent(new Event('change'));
 
-    const disabledOption = fixture.debugElement.queryAll(By.css('.select-options li'))[1]
-      .nativeElement;
-    disabledOption.click();
-    fixture.detectChanges();
-
-    expect(component.value).toBeUndefined();
+    expect(onChangeSpy).toHaveBeenCalledWith('1');
+    expect(onTouchedSpy).toHaveBeenCalled();
   });
 
-  it('should not open if select is disabled', () => {
+  it('should disable select when disabled=true', () => {
     component.disabled = true;
     fixture.detectChanges();
 
-    const trigger = fixture.debugElement.query(By.css('.select-trigger')).nativeElement;
-    trigger.click();
-    fixture.detectChanges();
-
-    expect(component.open).toBe(false);
+    const selectEl: HTMLSelectElement = fixture.debugElement.query(By.css('select')).nativeElement;
+    expect(selectEl.disabled).toBe(true);
   });
 
-  it('should return placeholder when no value is selected', () => {
+  it('should update disabled state through setDisabledState', () => {
+    component.setDisabledState(true);
+    expect(component.disabled).toBe(true);
+
+    component.setDisabledState(false);
+    expect(component.disabled).toBe(false);
+  });
+
+  it('should render options with disabled attribute when provided', () => {
     component.options = [
-      { value: '1', label: 'Opção 1' },
-      { value: '2', label: 'Opção 2' },
+      { value: '1', label: 'Option 1', disabled: true },
+      { value: '2', label: 'Option 2' },
     ];
-    component.value = undefined;
     fixture.detectChanges();
 
-    expect(component.selectedLabel).toBe(component.placeholder);
+    const optionEls: HTMLOptionElement[] = fixture.debugElement.queryAll(By.css('option')).map(o => o.nativeElement);
+    expect(optionEls[0].disabled).toBe(true);
+    expect(optionEls[1].disabled).toBe(true);
   });
 
-  it('should not open when disabled and toggle is called', () => {
-    component.disabled = true;
-    component.open = false;
+  it('should apply error class when error=true', () => {
+    component.error = true;
     fixture.detectChanges();
 
-    component.toggle();
+    const wrapper = fixture.debugElement.query(By.css('.select-wrapper')).nativeElement;
+    expect(wrapper.classList).toContain('error');
+  });
 
-    expect(component.open).toBe(false);
+  it('should not have error class when error=false', () => {
+    component.error = false;
+    fixture.detectChanges();
+
+    const wrapper = fixture.debugElement.query(By.css('.select-wrapper')).nativeElement;
+    expect(wrapper.classList).not.toContain('error');
+  });
+
+  it('should set value via writeValue', () => {
+    component.writeValue('2');
+    expect(component.value).toBe('2');
   });
 });

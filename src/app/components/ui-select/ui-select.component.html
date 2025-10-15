@@ -1,25 +1,8 @@
-<div class="select-container" [class.disabled]="disabled">
-  <button
-    type="button"
-    class="select-trigger"
-    [attr.aria-haspopup]="true"
-    [attr.aria-expanded]="open"
-    [attr.aria-disabled]="disabled"
-    (click)="toggle()"
-  >
-    {{ selectedLabel }}
-  </button>
-
-  <ul *ngIf="open" role="listbox" class="select-options">
-    <li
-      *ngFor="let opt of options; let i = index"
-      role="option"
-      [attr.aria-selected]="value === opt.value"
-      [class.disabled]="opt.disabled"
-      [class.focused]="i === focusedIndex"
-      (click)="select(opt)"
-    >
+<div class="select-wrapper" [class.disabled]="disabled" [class.error]="error">
+  <select [disabled]="disabled" [value]="value || ''" (change)="handleChange($event)">
+    <option value="" disabled selected *ngIf="!value">{{ placeholder }}</option>
+    <option *ngFor="let opt of options" [value]="opt.value" [disabled]="opt.disabled">
       {{ opt.label }}
-    </li>
-  </ul>
+    </option>
+  </select>
 </div>
